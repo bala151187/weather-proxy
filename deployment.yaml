@@ -1,0 +1,39 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: weather-proxy
+    name: weather-proxy
+    type: web
+  name: weather-proxy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: weather-proxy
+      name: weather-proxy
+      type: web
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: weather-proxy
+        name: weather-proxy
+        type: web
+      name: weather-proxy
+    spec:
+      containers:
+      - image: {{image}}
+        imagePullPolicy: IfNotPresent
+        name: weather-proxy
+        ports:
+        - containerPort: 3003
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
